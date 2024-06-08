@@ -96,6 +96,7 @@ app.get('/products/:productID/offers', async (req, res) => {
     }
 });
 
+// test
 // Get product categories from Amazon
 app.get('/products/:productID/categories', async (req, res) => {
     const { productID } = req.params;
