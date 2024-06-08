@@ -2,13 +2,13 @@ const express = require('express');
 const request = require('request-promise');
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 
 const generateScraperURL = (apiKey) => `http://api.scraperapi.com?api_key=${apiKey}&autoparse=true`;
 
 app.use(express.json());
 
-app.get('/', (_req, res) => {
+app.get('/', (req, res) => {
     res.send('Welcome to AmazonScout');
 });
 
@@ -16,6 +16,10 @@ app.get('/', (_req, res) => {
 app.get('/products/:productID', async (req, res) => {
     const { productID } = req.params;
     const { api_key } = req.query;
+
+    if (!api_key) {
+        return res.status(400).json({ error: 'API key is required' });
+    }
 
     try {
         const response = await request(`${generateScraperURL(api_key)}&url=https://www.amazon.com/dp/${productID}`);
@@ -30,6 +34,10 @@ app.get('/products/:productID/reviews', async (req, res) => {
     const { productID } = req.params;
     const { api_key } = req.query;
 
+    if (!api_key) {
+        return res.status(400).json({ error: 'API key is required' });
+    }
+
     try {
         const response = await request(`${generateScraperURL(api_key)}&url=https://www.amazon.com/product-reviews/${productID}`);
         res.json(JSON.parse(response));
@@ -42,6 +50,10 @@ app.get('/products/:productID/reviews', async (req, res) => {
 app.get('/products/:productID/offers', async (req, res) => {
     const { productID } = req.params;
     const { api_key } = req.query;
+
+    if (!api_key) {
+        return res.status(400).json({ error: 'API key is required' });
+    }
 
     try {
         const response = await request(`${generateScraperURL(api_key)}&url=https://www.amazon.com/gp/offer-listing/${productID}`);
@@ -56,6 +68,10 @@ app.get('/search/:searchQuery', async (req, res) => {
     const { searchQuery } = req.params;
     const { api_key } = req.query;
 
+    if (!api_key) {
+        return res.status(400).json({ error: 'API key is required' });
+    }
+
     try {
         const response = await request(`${generateScraperURL(api_key)}&url=https://www.amazon.com/s?k=${searchQuery}`);
         res.json(JSON.parse(response));
@@ -64,4 +80,4 @@ app.get('/search/:searchQuery', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
