@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
     res.send('Welcome to AmazonScout');
 });
 
+app.get('/products', (req, res) => {
+    res.send('Main URL for Products, add an Amazon product ID after it: e.g., /products/{productID}');
+});
+
 // Get product details from Amazon
 app.get('/products/:productID', async (req, res) => {
     const { productID } = req.params;
